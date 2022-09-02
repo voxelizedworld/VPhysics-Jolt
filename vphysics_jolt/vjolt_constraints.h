@@ -94,6 +94,7 @@ private:
 	constraintType_t m_ConstraintType = CONSTRAINT_UNKNOWN;
 
 	JoltPhysicsConstraintGroup *m_pGroup = nullptr;
+	constraint_breakableparams_t m_pConstraintParrams;
 
 	void *m_pGameData = nullptr;
 	JoltPhysicsEnvironment *m_pPhysicsEnvironment = nullptr;

@@ -223,10 +223,13 @@ bool JoltPhysicsConstraint::GetConstraintTransform( matrix3x4_t *pConstraintToRe
 	return true;
 }
 
-// Slart: Yet another debugging thing
 bool JoltPhysicsConstraint::GetConstraintParams( constraint_breakableparams_t *pParams ) const
 {
-	return false;
+	if ( !pParams )
+		return false;
+
+	*pParams = m_pConstraintParrams;
+	return true;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -335,8 +338,9 @@ void JoltPhysicsConstraint::InitialiseRagdoll( IPhysicsConstraintGroup *pGroup, 
 	if ( vjolt_ragdoll_hinge_optimization.GetBool() && InitialiseHingeFromRagdoll( pGroup, ragdoll ) )
 		return;
 
-	SetGroup( pGroup );
 	m_ConstraintType = CONSTRAINT_RAGDOLL;
+	m_pConstraintParrams = ragdoll.constraint;
+	SetGroup( pGroup );
 
 	JPH::Body *refBody = m_pObjReference->GetBody();
 	JPH::Body *attBody = m_pObjAttached->GetBody();
@@ -432,8 +436,9 @@ static JPH::Vec3 HingePerpendicularVector( JPH::Vec3Arg dir )
 
 void JoltPhysicsConstraint::InitialiseHinge( IPhysicsConstraintGroup *pGroup, const constraint_hingeparams_t &hinge )
 {
-	SetGroup( pGroup );
 	m_ConstraintType = CONSTRAINT_HINGE;
+	m_pConstraintParrams = hinge.constraint;
+	SetGroup( pGroup );
 
 	// Get our bodies
 	JPH::Body *refBody = m_pObjReference->GetBody();
@@ -470,8 +475,9 @@ void JoltPhysicsConstraint::InitialiseHinge( IPhysicsConstraintGroup *pGroup, co
 
 void JoltPhysicsConstraint::InitialiseSliding( IPhysicsConstraintGroup *pGroup, const constraint_slidingparams_t &sliding )
 {
-	SetGroup( pGroup );
 	m_ConstraintType = CONSTRAINT_SLIDING;
+	m_pConstraintParrams = sliding.constraint;
+	SetGroup( pGroup );
 
 	// Get our bodies
 	JPH::Body *refBody = m_pObjReference->GetBody();
@@ -508,8 +514,9 @@ void JoltPhysicsConstraint::InitialiseSliding( IPhysicsConstraintGroup *pGroup, 
 
 void JoltPhysicsConstraint::InitialiseBallsocket( IPhysicsConstraintGroup *pGroup, const constraint_ballsocketparams_t &ballsocket )
 {
-	SetGroup( pGroup );
 	m_ConstraintType = CONSTRAINT_BALLSOCKET;
+	m_pConstraintParrams = ballsocket.constraint;
+	SetGroup( pGroup );
 
 	// Get our bodies
 	JPH::Body *refBody = m_pObjReference->GetBody();
@@ -532,8 +539,9 @@ void JoltPhysicsConstraint::InitialiseBallsocket( IPhysicsConstraintGroup *pGrou
 
 void JoltPhysicsConstraint::InitialiseFixed( IPhysicsConstraintGroup *pGroup, const constraint_fixedparams_t &fixed )
 {
-	SetGroup( pGroup );
 	m_ConstraintType = CONSTRAINT_FIXED;
+	m_pConstraintParrams = fixed.constraint;
+	SetGroup( pGroup );
 
 	// Get our bodies
 	JPH::Body *refBody = m_pObjReference->GetBody();
@@ -553,8 +561,9 @@ void JoltPhysicsConstraint::InitialiseFixed( IPhysicsConstraintGroup *pGroup, co
 
 void JoltPhysicsConstraint::InitialiseLength( IPhysicsConstraintGroup *pGroup, const constraint_lengthparams_t &length )
 {
-	SetGroup( pGroup );
 	m_ConstraintType = CONSTRAINT_LENGTH;
+	m_pConstraintParrams = length.constraint;
+	SetGroup( pGroup );
 
 	// Get our bodies
 	JPH::Body *refBody = m_pObjReference->GetBody();
