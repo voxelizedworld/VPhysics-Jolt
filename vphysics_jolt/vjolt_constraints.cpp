@@ -66,10 +66,25 @@ void JoltPhysicsConstraintGroup::SolvePenetration( IPhysicsObject *pObj0, IPhysi
 void JoltPhysicsConstraintGroup::AddConstraint( JoltPhysicsConstraint *pConstraint )
 {
 	m_pConstraints.push_back( pConstraint );
+
+	constraint_breakableparams_t ConstraintParams;
+	if ( pConstraint->GetConstraintParams( &ConstraintParams ) )
+	{
+		m_fCachedMass[0] = pConstraint->GetReferenceObject()->GetMass();
+		m_fCachedMass[1] = pConstraint->GetAttachedObject()->GetMass();
+
+		pConstraint->GetReferenceObject()->SetMass( pConstraint->GetReferenceObject()->GetMass() * ConstraintParams.bodyMassScale[0] == 0.0f ? 1.0f : ConstraintParams.bodyMassScale[0] );
+		pConstraint->GetAttachedObject()->SetMass( pConstraint->GetAttachedObject()->GetMass() * ConstraintParams.bodyMassScale[1] == 0.0f ? 1.0f : ConstraintParams.bodyMassScale[1] );
+	}
 }
 
 void JoltPhysicsConstraintGroup::RemoveConstraint( JoltPhysicsConstraint *pConstraint )
 {
+	if ( m_fCachedMass[0] && m_fCachedMass[1] )
+	{
+		pConstraint->GetReferenceObject()->SetMass( m_fCachedMass[0] );
+		pConstraint->GetAttachedObject()->SetMass( m_fCachedMass[1] );
+	}
 	Erase( m_pConstraints, pConstraint );
 }
 

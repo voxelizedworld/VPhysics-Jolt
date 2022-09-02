@@ -42,6 +42,8 @@ public:
 private:
 	std::vector< JoltPhysicsConstraint * >	m_pConstraints;
 	constraint_groupparams_t				m_ErrorParams = {};
+
+	float m_fCachedMass[2];
 };
 
 class JoltPhysicsConstraint final : public IPhysicsConstraint, public IJoltObjectDestroyedListener
